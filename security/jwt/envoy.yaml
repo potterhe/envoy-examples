@@ -23,6 +23,24 @@ static_resources:
                 route:
                   cluster: local_service
           http_filters:
+          - name: envoy.filters.http.jwt_authn
+            typed_config:
+              "@type": type.googleapis.com/envoy.config.filter.http.jwt_authn.v2alpha.JwtAuthentication
+              providers:
+                provider1:
+                  issuer: testing@secure.istio.io
+                  local_jwks:
+                    filename: /etc/envoy/jwks.json
+                  forward: true
+                  forward_payload_header: x-jwt-payload
+              rules:
+              - match:
+                  prefix: /
+                requires:
+                  provider_and_audiences:
+                    provider_name: provider1
+                    audiences:
+                    - foo
           - name: envoy.filters.http.router
             typed_config: {}
   clusters:
