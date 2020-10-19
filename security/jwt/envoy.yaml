@@ -39,6 +39,8 @@ static_resources:
                 requires:
                   provider_and_audiences:
                     provider_name: provider1
+                    audiences:
+                    - foo
           - name: envoy.filters.http.router
             typed_config: {}
   clusters:

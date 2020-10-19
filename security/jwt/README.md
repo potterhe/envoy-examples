@@ -25,6 +25,8 @@ $ curl -v localhost:8080
 Jwt is missing
 ```
 
+在请求加添加jwt
+
 ```sh
 $ TOKEN=$(cat istio-jwt-tools/demo.jwt)
 $ curl --header "Authorization: Bearer $TOKEN" localhost:8080/anything
@@ -47,4 +49,25 @@ $ curl --header "Authorization: Bearer $TOKEN" localhost:8080/anything
   "origin": "192.168.254.42",
   "url": "http://localhost:8080/anything"
 }
+```
+
+验证 audience,issuer
+
+```sh
+$ cd istio-jwt-tools/
+TOKEN=$(./gen-jwt.py ./key.pem --expire=50 --aud=foo)
+```
+
+特定前缀
+
+```yaml
+              rules:
+              - match:
+                  prefix: /prefix
+                requires:
+                  provider_and_audiences:
+                    provider_name: provider1
+                    audiences:
+                    - foo
+
 ```
