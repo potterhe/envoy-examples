@@ -37,6 +37,13 @@ static_resources:
                   prefix: "/"
                 route:
                   cluster: dynamic_forward_proxy_cluster
+              - match:
+                  connect_matcher: {}
+                route:
+                  cluster: dynamic_forward_proxy_cluster
+                  upgrade_configs:
+                  - upgrade_type: CONNECT
+                    enabled: true
           http_filters:
           - name: envoy.filters.http.dynamic_forward_proxy
             typed_config:
@@ -58,10 +65,3 @@ static_resources:
         dns_cache_config:
           name: dynamic_forward_proxy_cache_config
           dns_lookup_family: V4_ONLY
-    transport_socket:
-      name: envoy.transport_sockets.tls
-      typed_config:
-        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
-        common_tls_context:
-          validation_context:
-            trusted_ca: {filename: /etc/ssl/certs/ca-certificates.crt}
